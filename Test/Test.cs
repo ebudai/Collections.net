@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Test
+namespace Budaisoft.Collections.Generic.Test
 {
     public class Test
     {

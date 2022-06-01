@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Budaisoft.Collections
+namespace Budaisoft.Collections.Generic
 {
     /// <summary>
     ///     Wrapper for <see cref="ConcurrentDictionary{TKey, TValue}"/> using <see cref="Lazy{T, TMetadata}"/> instantiation for <typeparamref name="TValue"/>
