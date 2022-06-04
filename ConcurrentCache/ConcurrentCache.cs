@@ -19,7 +19,7 @@ namespace Budaisoft.Collections.Generic
         ///     Initializes a new instance of the <see cref="ConcurrentCache{TKey, TValue}"/> with <see cref="EqualityComparer{TKey}"/>
         ///     for the equality comparer and a value factory which supplies the default value of <typeparamref name="TValue"/>
         /// </summary>
-        public ConcurrentCache() => _backingDictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>();
+        public ConcurrentCache() { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConcurrentCache{TKey, TValue}"/> with a value factory which supplies the default
@@ -33,7 +33,7 @@ namespace Budaisoft.Collections.Generic
         ///     for the equality comparer and the specified value factory
         /// </summary>
         /// <param name="defaultValueFactory">callable used to produce values of type <typeparamref name="TValue"/> given a <typeparamref name="TKey"/></param>
-        public ConcurrentCache(Expression<Func<TKey, TValue>> defaultValueFactory) : this() => _valueFactory = defaultValueFactory.Compile();
+        public ConcurrentCache(Expression<Func<TKey, TValue>> defaultValueFactory) => _valueFactory = defaultValueFactory.Compile();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConcurrentCache{TKey, TValue}"/> with specified equality comparer and value factory
@@ -66,7 +66,7 @@ namespace Budaisoft.Collections.Generic
         /// <returns>true if the key/value pair was successfully added to the <see cref="ConcurrentDictionary{TKey, TValue}"/></returns>
         /// <exception cref="ArgumentNullException"><paramref name="key"/> is null</exception>
         /// <exception cref="OverflowException">the underlying <see cref="ConcurrentDictionary{TKey, TValue}"/> is full</exception>
-        public bool TryAdd(TKey key, TValue value) => _backingDictionary.TryAdd(key, new Lazy<TValue>(value));
+        public bool TryAdd(TKey key, TValue value) => _backingDictionary.TryAdd(key, new Lazy<TValue>(() => value, isThreadSafe: true));
 
         /// <summary>
         ///     Attempts to remove and return the the value with the specified <paramref name="key"/>
@@ -118,7 +118,7 @@ namespace Budaisoft.Collections.Generic
         public TValue this[TKey key]
         {
             get => _backingDictionary.GetOrAdd(key, k => new Lazy<TValue>(() => _valueFactory(k))).Value;
-            set => _backingDictionary[key] = new Lazy<TValue>(value);
+            set => _backingDictionary[key] = new Lazy<TValue>(() => value, isThreadSafe: true);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Budaisoft.Collections.Generic
         /// <returns>true if the <see cref="ConcurrentDictionary{TKey, TValue}"/> contains an element with <paramref name="key"/>.</returns>
         public bool ContainsKey(TKey key) => _backingDictionary.ContainsKey(key);
 
-        private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _backingDictionary; // wrapped dictionary
+        private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _backingDictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>(); // wrapped dictionary
         private readonly Func<TKey, TValue> _valueFactory = _ => default; // function to return default values
     }
 }
