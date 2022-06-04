@@ -15,6 +15,10 @@ namespace Budaisoft.Collections.Generic
     /// </remarks>
     public class ConcurrentCache<TKey, TValue>
     {
+
+        private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _backingDictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>(); // wrapped dictionary
+        private readonly Func<TKey, TValue> _valueFactory = _ => default; // function to return default values
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConcurrentCache{TKey, TValue}"/> with <see cref="EqualityComparer{TKey}"/>
         ///     for the equality comparer and a value factory which supplies the default value of <typeparamref name="TValue"/>
@@ -127,8 +131,5 @@ namespace Budaisoft.Collections.Generic
         /// <param name="key">The key to locate in the <see cref="ConcurrentDictionary{TKey, TValue}"/></param>
         /// <returns>true if the <see cref="ConcurrentDictionary{TKey, TValue}"/> contains an element with <paramref name="key"/>.</returns>
         public bool ContainsKey(TKey key) => _backingDictionary.ContainsKey(key);
-
-        private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _backingDictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>(); // wrapped dictionary
-        private readonly Func<TKey, TValue> _valueFactory = _ => default; // function to return default values
     }
 }

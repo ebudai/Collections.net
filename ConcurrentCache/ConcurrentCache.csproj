@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <Nullable>disable</Nullable>
     <RootNamespace>Budaisoft.Collections</RootNamespace>
     <AssemblyName>Budaisoft.Collections</AssemblyName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>
