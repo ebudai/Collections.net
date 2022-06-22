@@ -15,30 +15,25 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Copyright>Eric Budai</Copyright>
+    <Authors>Eric Budai</Authors>
     <Description>A collection of useful Collections</Description>
-    <PackageIcon>Buddha-Statue-icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/ebudai/Collections.net.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ebudai/Collections.net.git</PackageProjectUrl>
     <PackageTags>collections concurrent</PackageTags>
     <PackageReleaseNotes>Currently, this only has a better concurrent dictionary.</PackageReleaseNotes>
+    <PackageIcon>Buddha-Statue-icon.png</PackageIcon>
+    <Version>1.0.4</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
   
   <ItemGroup>
-    <None Update="Buddha-Statue-icon.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
+    <None Include="images\Buddha-Statue-icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <None Include="..\README.md" pack="true" PackagePath="." />
+  </ItemGroup>
 </Project>

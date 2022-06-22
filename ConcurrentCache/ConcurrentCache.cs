@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace Budaisoft.Collections.Generic
 {
     /// <summary>
-    ///     Wrapper for <see cref="ConcurrentDictionary{TKey, TValue}"/> using <see cref="Lazy{T, TMetadata}"/> instantiation for <typeparamref name="TValue"/>
+    ///     Wrapper for <see cref="ConcurrentDictionary{TKey, TValue}"/> using <see cref="Lazy{T}"/> instantiation for <typeparamref name="TValue"/>
     /// </summary>
     /// <remarks>
     ///     The purpose of this class is so that we can have what behaves like a normal <see cref="ConcurrentDictionary{TKey, TValue}"/>,
@@ -37,14 +36,14 @@ namespace Budaisoft.Collections.Generic
         ///     for the equality comparer and the specified value factory
         /// </summary>
         /// <param name="defaultValueFactory">callable used to produce values of type <typeparamref name="TValue"/> given a <typeparamref name="TKey"/></param>
-        public ConcurrentCache(Expression<Func<TKey, TValue>> defaultValueFactory) => _valueFactory = defaultValueFactory.Compile();
+        public ConcurrentCache(Func<TKey, TValue> defaultValueFactory) => _valueFactory = defaultValueFactory;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConcurrentCache{TKey, TValue}"/> with specified equality comparer and value factory
         /// </summary>
         /// <param name="comparer">equality comparer for <typeparamref name="TKey"/></param>
         /// <param name="defaultValueFactory">callable used to produce values of type <typeparamref name="TValue"/> given a <typeparamref name="TKey"/></param>
-        public ConcurrentCache(IEqualityComparer<TKey> comparer, Expression<Func<TKey, TValue>> defaultValueFactory) : this(comparer) => _valueFactory = defaultValueFactory.Compile();
+        public ConcurrentCache(IEqualityComparer<TKey> comparer, Func<TKey, TValue> defaultValueFactory) : this(comparer) => _valueFactory = defaultValueFactory;
 
         /// <summary>
         ///     Gets a collection containing the keys in the <see cref="ConcurrentDictionary{TKey, TValue}"/>
@@ -97,7 +96,7 @@ namespace Budaisoft.Collections.Generic
         /// </returns>
         /// <exception cref="ArgumentNullException">if <paramref name="key"/> or <paramref name="valueFactory"/> is null</exception>
         /// <exception cref="OverflowException">if the <see cref="ConcurrentDictionary{TKey, TValue}"/> is null</exception>
-        public TValue GetOrAdd(TKey key, Expression<Func<TKey, TValue>> valueFactory) => _backingDictionary.GetOrAdd(key, k => new Lazy<TValue>(() => valueFactory.Compile()(k))).Value;
+        public TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory) => _backingDictionary.GetOrAdd(key, k => new Lazy<TValue>(() => valueFactory(k))).Value;
 
         /// <summary>
         ///     Adds a key/value pair to the <see cref="ConcurrentDictionary{TKey, TValue}"/> if <paramref name="key"/> does not exist
@@ -111,7 +110,7 @@ namespace Budaisoft.Collections.Generic
         /// <exception cref="ArgumentNullException">if <paramref name="key"/> is null</exception>
         /// <exception cref="ArgumentNullException">if <paramref name="valueFactory"/> is null</exception>
         /// <exception cref="OverflowException">if the <see cref="ConcurrentDictionary{TKey, TValue}"/> is null</exception>
-        public TValue GetOrAdd(TKey key, Expression<Func<TValue>> valueFactory) => _backingDictionary.GetOrAdd(key, _ => new Lazy<TValue>(valueFactory.Compile())).Value;
+        public TValue GetOrAdd(TKey key, Func<TValue> valueFactory) => _backingDictionary.GetOrAdd(key, _ => new Lazy<TValue>(valueFactory)).Value;
 
         /// <summary>
         ///     Gets or sets the value associated with the specified <paramref name="key"/>.
